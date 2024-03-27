@@ -1,0 +1,17 @@
+#+TITLE: Flight Simulator Panel Project
+#+AUTHOR: Ethan Smith
+#+DATE: 27 March 2024
+#+EMAIL: ethansmith.dev@gmail.com
+
+* Introduction
+  This project aims to be a USB-connected Flight Sim Panel.  It should work with
+  both MSFS and XPlane.  I am currently basing the project on the STM32F401; I
+  may consider other microprocessors.  I just happen to have this chip lying
+  around.  Regardless, my USB connection shouldn't be hacked together, I want
+  real hardware support for USB.
+
+  
+* Goals
+  - all of the buttons needed to simulate at least a Cessna 172.
+  - 6 pack flight instruments.
+  - Radio controls and readout.
