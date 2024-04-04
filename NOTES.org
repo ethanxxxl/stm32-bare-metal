@@ -1,0 +1,74 @@
+#+TITLE: Flight Simulator Panel Notes
+#+AUTHOR: Ethan Smith
+#+DATE: 3 April 2024
+#+EMAIL: ethansmith.dev@gmail.com
+
+* Introduction
+  For a few years now, I have wanted to create a custom flight simulator
+  panel/cockpit.  I remember when I was in high school, I started by hacking
+  together a USB test with an Arduino Uno.  To do this, I used the LUFA library
+  and utilized the 32u2 programmer chip on my Uno board.  That was about as far
+  as I got with that initial test before I lost interest or otherwise got busy.
+  I have decided to take up the project again, mostly as an exercise in low
+  level embedded programming.
+
+  I was going through Low Byte Productions' "Blinky to Boodloader" series to
+  learn more about ARM MCUs.  In that series, he uses OpenCM3, which is a
+  firmware library for STM32 processors.  It isn't a Hardware Abstraction Layer
+  (HAL) however.  I think it was a good on-ramp for my desire to go lower level.
+  I was about halfway through the series when I decided to read up on the USB
+  peripheral on the STM32F401 featured on the dev board I bought for the series.
+  This was when I decided to start this project again.  I ditched OpenCM3 in
+  favor of the CMSIS header files provided by ST and started rolling my own
+  firmware from scratch.
+
+  ST provides a lot of excellent resources to get something working on their
+  products quickly.  These come at the cost of not being exposed to exactly how
+  the device you are programming works.  If my primary concern was getting a
+  project finished, I would use the STM32CubeIDE and the CMSIS HAL libraries
+  provided by ST.  *The primary goal of this project is not to create a Flight
+  Simulator Panel*. It is to learn as much as I can about embedded ARM
+  programming.  This is why I am only using the Core and Device CMSIS headers.
+  This is certainly the most difficult way to start a project.  However, it is
+  much more rewarding to truly know how something works.
+
+* System Setup
+  If there is one thing I wish I had realized before I started this project,
+  this would be it: /Nothing is set up for you. *nothing*./
+
+  Of course, anyone who has done embedded programming knows that if you want to
+  know something, the best place to look is the Reference Manual.  I quickly
+  learned that that was only partially true.  It is more accurate to say that
+  the best source of information is the Reference Manuals (plural).  This is the
+  first time I have done a serious embedded project on an ARM Cortex processor.
+  ST makes excellent documentation, but it is not exhaustive.  There is also an
+  ARMv7-M Architecture Reference Manual, which describes all of the "System
+  Level" peripherals that you get on any ARM implementation.
+
+** Reset Clock Control (RCC)
+   - Clock source (HSI vs HSE)
+   - Phase Lock Loop (PLL)
+   - Peripheral Clock Enable
+   
+** The Vector Table and Exceptions
+   - Make sure you include *ALL* of the system exceptions (there are 15 in
+     ARMv7-M)
+   - keep an eye on priorities and priority masking. The base-level priority
+     needs to be increased to allow your interrupts to run.
+
+** SysTick
+   - Is an exception, has an "IRQ" number of -1, Exception Number 15.
+   
+** Write a good and proper Reset Handler
+   - copy the ~.data~ section from the Load Address (LMA) to the Virtual Address
+     (VMA)
+   - write zeroes to the ~.bss~ section
+   - call your main function.
+
+
+** Linker Scripts!?
+   - Put your variables in RAM, not FLASH.
+   - make a custom section for your vector table.  Put it at the top of your
+     program.
+   - Defining Symbols in linker scripts is unintuitive.
+   - ~info ld~ is a great resource.
