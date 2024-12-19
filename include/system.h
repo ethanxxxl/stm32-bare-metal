@@ -6,10 +6,10 @@
 #define CPU_FREQ     (84000000)
 #define SYSTICK_FREQ (1000)
 
-//Vector Table////////////////////////////////////////////////////////////////
+///////////////////////////////// Vector Table /////////////////////////////////
 typedef void(*irq_vector)(void);
 
-#define NUM_INTERRUPTS 52
+#define NUM_INTERRUPTS 84
 typedef struct {
     uint32_t*  stack_start;
     irq_vector reset_vector;
@@ -36,6 +36,8 @@ void void_vector(void);
 /* SYSTICK SETUP
  */
 void setup_systick(void);
+
+/** returns number of ticks (10ms/tick) since start of program */
 uint64_t get_ticks(void);
 
 /* RCC SETUP
